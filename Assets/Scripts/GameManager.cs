@@ -43,10 +43,10 @@ public class GameManager : MonoBehaviour
         float distance2 = Vector3.Distance(rightSpawnPosition, leftSpawnPosition);
 
         // Set the scale of the walls based on the calculated distances
-        wall_left.transform.localScale = new Vector3(0.5f, distance1, 1);
-        wall_right.transform.localScale = new Vector3(0.5f, distance1, 1);
-        wall_top.transform.localScale = new Vector3(distance2, 0.5f, 1);
-        wall_bottom.transform.localScale = new Vector3(distance2, 0.5f, 1);
+        wall_left.transform.localScale = new Vector3(0.2f, distance1, 1);
+        wall_right.transform.localScale = new Vector3(0.2f, distance1, 1);
+        wall_top.transform.localScale = new Vector3(distance2, 0.2f, 1);
+        wall_bottom.transform.localScale = new Vector3(distance2, 0.2f, 1);
 
     }
 }
