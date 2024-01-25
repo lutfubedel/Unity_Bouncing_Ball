@@ -9,16 +9,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform wallParent;
 
 
+
     void Start()
     {
         WallSpawner();
-
+        Application.targetFrameRate = 60;
     }
 
     void Update()
     {
-        
+       
     }
+
 
     private void WallSpawner()
     {
@@ -47,6 +49,9 @@ public class GameManager : MonoBehaviour
         wall_right.transform.localScale = new Vector3(0.2f, distance1, 1);
         wall_top.transform.localScale = new Vector3(distance2, 0.2f, 1);
         wall_bottom.transform.localScale = new Vector3(distance2, 0.2f, 1);
+
+        wall_bottom.GetComponent<BoxCollider2D>().isTrigger = true;
+        wall_bottom.tag = "Wall_Bottom";
 
     }
 }
