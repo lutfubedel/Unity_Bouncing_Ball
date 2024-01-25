@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,17 +9,35 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private Transform wallParent;
 
+    [Header("Timer")]
+    [SerializeField] private Image bar_yellow;
+    [SerializeField] private Image bar_red;
+    [SerializeField] private float timer;
 
 
     void Start()
     {
         WallSpawner();
         Application.targetFrameRate = 60;
+
     }
 
     void Update()
     {
-       
+        if(timer>0)
+        {
+            timer -= Time.deltaTime;
+            float fillPercentage = timer / 60f;
+
+            bar_yellow.fillAmount = fillPercentage;
+            bar_red.fillAmount = fillPercentage;
+
+            if (timer<20)
+            {
+                bar_yellow.gameObject.SetActive(false);
+            }
+        }
+
     }
 
 
