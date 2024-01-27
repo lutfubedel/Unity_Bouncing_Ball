@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Stick
   - Wall_Bottom
+  - Hoop
   layers:
   - Default
   - TransparentFX

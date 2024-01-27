@@ -37,6 +37,10 @@ public class GameManager : MonoBehaviour
                 bar_yellow.gameObject.SetActive(false);
             }
         }
+        else
+        {
+
+        }
 
     }
 
