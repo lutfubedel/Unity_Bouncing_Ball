@@ -9,21 +9,12 @@ public class OpenUIScript : MonoBehaviour
     [Header("Screens")]
     [SerializeField] private GameObject[] screens;
 
-    [Header("Levels")]
-    [SerializeField] private Button[] levels;
-
     private void Start()
     {
-        for (int i = 0; i < levels.Length; i++)
-        {
-            int levelIndex = i;
-            levels[i].onClick.AddListener(() => OpenLevel(levelIndex));
-        }
+
     }
     public void OpenLevel(int index)
     {
-
-        SceneManager.LoadScene(index);
 
     }
     
