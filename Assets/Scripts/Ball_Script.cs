@@ -11,27 +11,50 @@ public class Ball_Script : MonoBehaviour
     Vector3 lastVelocity;
 
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float bounce_count;
-    [SerializeField] private TMP_Text bonus_text;
+    [SerializeField] public float bounce_count;
+    [SerializeField] private Text bonus_text;
+    [SerializeField] private GameObject panelDead,panelCompleted;
+
+    public bool isDead,isCompleted,canHoop;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        isDead = false;
+        isCompleted = false;
+        canHoop = true;
     }
 
     void Update()
     {
         lastVelocity = rb.velocity;
-        bonus_text.text = "Bonus : x" + bounce_count.ToString();
+        bonus_text.text = "x" + bounce_count.ToString();
+
+        if(isDead)
+        {
+            rb.simulated = false;
+            panelDead.SetActive(true);
+        }
+
+        print("CanHoop : " + canHoop);
+
+        if(isCompleted)
+        {
+            rb.simulated = false;
+        }
+
+        if(!canHoop)
+        {
+            Invoke(nameof(HoopControl), 0.5f);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
-        if(collision.gameObject.CompareTag("Stick"))
+        if (collision.gameObject.CompareTag("Stick"))
         {
             Vector2 randomForce = new Vector2(Random.Range(-1f, 1f), 1f).normalized;
-            rb.AddForce(randomForce * moveSpeed/2, ForceMode2D.Impulse);
+            rb.AddForce(randomForce * moveSpeed / 2, ForceMode2D.Impulse);
             bounce_count = 0;
         }
         else
@@ -46,14 +69,28 @@ public class Ball_Script : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Wall_Bottom"))
+        if(collision.CompareTag("Wall_Bottom"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-
-        if(collision.gameObject.CompareTag("Hoop"))
-        {
-
+            isDead = true;
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Hoop") && canHoop)
+        {
+            isCompleted = true;
+        }
+
+        if (collision.CompareTag("Bottom_Hoop"))
+        {
+            canHoop = false;
+        }
+    }
+
+    private void HoopControl()
+    {
+        canHoop = true;
+    }
+
 }

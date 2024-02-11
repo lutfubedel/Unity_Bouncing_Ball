@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,39 +12,105 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform wallParent;
 
     [Header("Timer")]
-    [SerializeField] private Image bar_yellow;
-    [SerializeField] private Image bar_red;
+    [SerializeField] private Text timerText;
     [SerializeField] private float timer;
+
+    [Header("Completed Panel")]
+    [SerializeField] private GameObject panelDead;
+    [SerializeField] private GameObject panelCompleted;
+    [SerializeField] private Text completed_score_text;
+    [SerializeField] private Ball_Script ball;
+    [SerializeField] private GameObject[] stars;
+    [SerializeField] private GameObject[] buttons;
+
+    [Header("Score")]
+    [SerializeField] private int targetScore;
+    private int scoreIncreaseRate = 200;
+    private int currentScore = 0;
+
+    public bool startCoroutine;
+
 
 
     void Start()
     {
         WallSpawner();
         Application.targetFrameRate = 60;
-
     }
 
     void Update()
     {
-        if(timer>0)
+        if (timer > 0 && !ball.isCompleted && !ball.isDead)
         {
             timer -= Time.deltaTime;
-            float fillPercentage = timer / 60f;
-
-            bar_yellow.fillAmount = fillPercentage;
-            bar_red.fillAmount = fillPercentage;
-
-            if (timer<20)
-            {
-                bar_yellow.gameObject.SetActive(false);
-            }
+            timerText.text = String.Format("00:{0:00}", (int)timer);
         }
         else
         {
-
+            ball.isDead = true;
         }
 
+
+        if (ball.isCompleted)
+        {
+            panelCompleted.SetActive(true);
+ 
+            targetScore = Mathf.RoundToInt(timer * ball.bounce_count * 10);
+
+            if (currentScore < targetScore)
+            {
+                currentScore += Mathf.CeilToInt(scoreIncreaseRate * Time.deltaTime);
+                completed_score_text.text = currentScore.ToString();
+            }
+
+            else 
+            {
+                startCoroutine = true;
+            }
+
+            StartCoroutine(UITimer());
+        }
+
+        
+
+
+        
+
     }
+
+
+    IEnumerator UITimer()
+    {
+        if(startCoroutine)
+        {
+            if(targetScore>500)
+            {
+                stars[0].SetActive(true);
+                yield return new WaitForSeconds(1f);
+
+                if(targetScore>1000)
+                {
+                    stars[1].SetActive(true);
+                    yield return new WaitForSeconds(1f);
+
+                    if (targetScore > 1500)
+                    {
+                        stars[2].SetActive(true);
+                        yield return new WaitForSeconds(1f);
+                    }
+                }
+            }
+
+            for(int i=0; i<buttons.Length;i++)
+            {
+                buttons[i].SetActive(true);
+            }
+        }
+    }
+
+
+
+
 
 
     private void WallSpawner()
@@ -77,4 +145,18 @@ public class GameManager : MonoBehaviour
         wall_bottom.tag = "Wall_Bottom";
 
     }
+
+    public void PlayAgain()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("OpenScene");
+    }
+    public void NextLevel()
+    {
+
+    }
+
 }

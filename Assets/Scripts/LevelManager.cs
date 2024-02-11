@@ -10,8 +10,6 @@ public class Level
     public bool isLocked;
 }
 
-
-
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
@@ -45,5 +43,11 @@ public class LevelManager : MonoBehaviour
     {
         int save = IsLevelLocked(levelID) == true ? 1 : 0;
         PlayerPrefs.SetInt("Level" + levelID.ToString(), save);
+    }
+
+    public bool GetLevel(int levelID)
+    {
+        int status = PlayerPrefs.GetInt("Level" + levelID.ToString());
+        return status == 1 ? true : false;
     }
 }
