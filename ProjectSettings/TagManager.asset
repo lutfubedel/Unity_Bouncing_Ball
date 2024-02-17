@@ -4,9 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Stick
+  - Level_1
   - Wall_Bottom
+  - Stick
   - Hoop
+  - Bottom_Hoop
+  - Obstacle_Rotate
   layers:
   - Default
   - TransparentFX

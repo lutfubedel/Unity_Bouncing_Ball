@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,40 +12,89 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform wallParent;
 
     [Header("Timer")]
-    [SerializeField] private Image bar_yellow;
-    [SerializeField] private Image bar_red;
+    [SerializeField] private Text timerText;
     [SerializeField] private float timer;
+
+    [Header("Completed Panel")]
+    [SerializeField] private GameObject panelDead;
+    [SerializeField] private GameObject panelCompleted;
+    [SerializeField] private Text completed_score_text;
+    [SerializeField] private Ball_Script ball;
+    [SerializeField] private GameObject[] stars;
+    [SerializeField] private GameObject[] buttons;
+
+    [Header("Score")]
+    [SerializeField] private int targetScore;
+    private int scoreIncreaseRate = 200;
+    private int currentScore = 0;
+
+    public bool startCoroutine;
+    public int levelID;
 
 
     void Start()
     {
         WallSpawner();
         Application.targetFrameRate = 60;
-
+        levelID = SceneManager.GetActiveScene().buildIndex;
     }
+
 
     void Update()
     {
-        if(timer>0)
+        if (timer > 0 && !ball.isCompleted && !ball.isDead)
         {
+            int minutes = Mathf.FloorToInt(timer / 60);
+            int seconds = Mathf.FloorToInt(timer % 60);
+
+            timerText.text = minutes.ToString("00") + ":" + seconds.ToString("00");
             timer -= Time.deltaTime;
-            float fillPercentage = timer / 60f;
-
-            bar_yellow.fillAmount = fillPercentage;
-            bar_red.fillAmount = fillPercentage;
-
-            if (timer<20)
-            {
-                bar_yellow.gameObject.SetActive(false);
-            }
         }
         else
         {
-
+            ball.isDead = true;
         }
 
+
+        if (ball.isCompleted)
+        {
+            panelCompleted.SetActive(true);
+
+            targetScore = Mathf.RoundToInt(timer * ball.bounce_count * 10);
+
+            if (currentScore < targetScore)
+            {
+                currentScore += Mathf.CeilToInt(scoreIncreaseRate * Time.deltaTime);
+                completed_score_text.text = currentScore.ToString();
+            }
+            else
+            {
+                startCoroutine = true;
+            }
+
+            StartCoroutine(UITimer());
+
+            if(targetScore > PlayerPrefs.GetInt("Level_" + levelID.ToString()))
+            {
+                PlayerPrefs.SetInt("Level_" + (levelID).ToString(), targetScore);
+            }
+            
+        }
     }
 
+
+    public void PlayAgain()
+    {
+        SceneManager.LoadScene(levelID);
+    }
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("OpenScene");
+    }
+    public void NextLevel()
+    {
+        SceneManager.LoadScene(levelID + 1);
+    }
 
     private void WallSpawner()
     {
@@ -76,5 +127,39 @@ public class GameManager : MonoBehaviour
         wall_bottom.GetComponent<BoxCollider2D>().isTrigger = true;
         wall_bottom.tag = "Wall_Bottom";
 
+    }
+
+    IEnumerator UITimer()
+    {
+        if (startCoroutine)
+        {
+            if (targetScore > 500)
+            {
+                stars[0].SetActive(true);
+                yield return new WaitForSeconds(1f);
+
+                if (targetScore > 1000)
+                {
+                    stars[1].SetActive(true);
+                    yield return new WaitForSeconds(1f);
+
+                    if (targetScore > 1500)
+                    {
+                        stars[2].SetActive(true);
+                        yield return new WaitForSeconds(1f);
+                    }
+                }
+            }
+
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                buttons[i].SetActive(true);
+            }
+
+            if (targetScore < 500)
+            {
+                buttons[0].SetActive(false);
+            }
+        }
     }
 }

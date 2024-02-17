@@ -9,25 +9,6 @@ public class OpenUIScript : MonoBehaviour
     [Header("Screens")]
     [SerializeField] private GameObject[] screens;
 
-    private void Start()
-    {
-
-    }
-    public void OpenLevel(int index)
-    {
-
-    }
-    
-
-
-
-
-
-
-
-
-
-
     public void OpenLevelScreen()
     {
         OpenScreen(1);
