@@ -31,17 +31,24 @@ public class GameManager : MonoBehaviour
     public bool startCoroutine;
     public int levelID;
 
+    AudioSource source;
+
 
     void Start()
     {
         WallSpawner();
         Application.targetFrameRate = 60;
         levelID = SceneManager.GetActiveScene().buildIndex;
+        source = GetComponent<AudioSource>();
+
+        
     }
 
 
     void Update()
     {
+        source.volume = PlayerPrefs.GetFloat("MusicVolume");
+
         if (timer > 0 && !ball.isCompleted && !ball.isDead)
         {
             int minutes = Mathf.FloorToInt(timer / 60);
@@ -60,25 +67,33 @@ public class GameManager : MonoBehaviour
         {
             panelCompleted.SetActive(true);
 
-            targetScore = Mathf.RoundToInt(timer * ball.bounce_count * 10);
+            targetScore = Mathf.RoundToInt(timer * ball.bounce_count * 2);
 
-            if (currentScore < targetScore)
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
             {
-                currentScore += Mathf.CeilToInt(scoreIncreaseRate * Time.deltaTime);
+                currentScore = targetScore;
                 completed_score_text.text = currentScore.ToString();
+                StartCoroutine(UITimer());
             }
             else
             {
-                startCoroutine = true;
-            }
+                if (currentScore < targetScore)
+                {
+                    currentScore += Mathf.CeilToInt(scoreIncreaseRate * Time.deltaTime);
+                    completed_score_text.text = currentScore.ToString();
+                }
+                else
+                {
+                    startCoroutine = true;
+                }
 
-            StartCoroutine(UITimer());
+                StartCoroutine(UITimer());
 
-            if(targetScore > PlayerPrefs.GetInt("Level_" + levelID.ToString()))
-            {
-                PlayerPrefs.SetInt("Level_" + (levelID).ToString(), targetScore);
+                if (targetScore > PlayerPrefs.GetInt("Level_" + levelID.ToString()))
+                {
+                    PlayerPrefs.SetInt("Level_" + (levelID).ToString(), targetScore);
+                }
             }
-            
         }
     }
 
@@ -126,6 +141,8 @@ public class GameManager : MonoBehaviour
 
         wall_bottom.GetComponent<BoxCollider2D>().isTrigger = true;
         wall_bottom.tag = "Wall_Bottom";
+        wall_left.tag = "Wall_Left";
+        wall_right.tag = "Wall_Right";
 
     }
 

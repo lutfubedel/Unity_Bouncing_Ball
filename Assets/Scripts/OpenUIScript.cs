@@ -9,6 +9,28 @@ public class OpenUIScript : MonoBehaviour
     [Header("Screens")]
     [SerializeField] private GameObject[] screens;
 
+    [Header("Settings")]
+    [SerializeField] private Slider musicSlider;
+    [SerializeField] private Slider soundSlider;
+
+    AudioSource source;
+
+    private void Start()
+    {
+        source = GetComponent<AudioSource>();
+
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
+        soundSlider.value = PlayerPrefs.GetFloat("SoundVolume");
+    }
+    private void Update()
+    {
+        PlayerPrefs.SetFloat("MusicVolume", musicSlider.value);
+        PlayerPrefs.SetFloat("SoundVolume", soundSlider.value);
+
+        source.volume = PlayerPrefs.GetFloat("MusicVolume");
+    }
+
+
     public void OpenLevelScreen()
     {
         OpenScreen(1);

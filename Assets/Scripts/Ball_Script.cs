@@ -6,25 +6,36 @@ using UnityEngine.UI;
 public class Ball_Script : MonoBehaviour
 {
     Rigidbody2D rb;
+    AudioSource source;
     Vector3 lastVelocity;
 
+    [Header("Bounce")]
     [SerializeField] private float moveSpeed;
     [SerializeField] public float bounce_count;
     [SerializeField] private Text bonus_text;
     [SerializeField] private GameObject panelDead;
+
+    [Header("Sound")]
+    [SerializeField] private AudioClip bounceSound;
+
 
     public bool isDead, isCompleted, canHoop;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        source = GetComponent<AudioSource>();
+
         isDead = false;
         isCompleted = false;
         canHoop = true;
+
     }
 
     void Update()
     {
+        source.volume = PlayerPrefs.GetFloat("SoundVolume");
+
         lastVelocity = rb.velocity;
         bonus_text.text = "x" + bounce_count.ToString();
 
@@ -52,12 +63,14 @@ public class Ball_Script : MonoBehaviour
             Vector2 randomForce = new Vector2(Random.Range(-2f, 2f), 2f).normalized;
             rb.AddForce(randomForce * moveSpeed, ForceMode2D.Impulse);
             bounce_count = 0;
+            source.PlayOneShot(bounceSound);
         }
         else
         {
             Vector3 direction = Vector3.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
             rb.velocity = direction * moveSpeed;
             bounce_count++;
+            source.PlayOneShot(bounceSound);
         }
     }
 

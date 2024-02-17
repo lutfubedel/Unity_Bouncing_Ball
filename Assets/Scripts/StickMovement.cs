@@ -7,10 +7,21 @@ public class StickMovement : MonoBehaviour
 {
     Rigidbody2D rb;
     [SerializeField] private float moveSpeed;
+    [SerializeField] private Vector3 wall_left;
+    [SerializeField] private Vector3 wall_Right;
 
     void Start()
     {
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
+
         rb = GetComponent<Rigidbody2D>();
+
+        Vector3 leftSpawnPosition = Camera.main.ScreenToWorldPoint(new Vector3(0f, screenHeight / 2, -Camera.main.transform.position.z));
+        Vector3 rightSpawnPosition = Camera.main.ScreenToWorldPoint(new Vector3(screenWidth, screenHeight / 2, -Camera.main.transform.position.z));
+
+        wall_left = leftSpawnPosition;
+        wall_Right = rightSpawnPosition;
     }
 
 
@@ -22,7 +33,7 @@ public class StickMovement : MonoBehaviour
 
             if (touch.phase == TouchPhase.Began)
             {
-                moveSpeed = 10;
+                moveSpeed = 25;
             }
 
             if (touch.phase == TouchPhase.Moved)
@@ -37,5 +48,12 @@ public class StickMovement : MonoBehaviour
             
         }
 
+    }
+
+    private void LateUpdate()
+    {
+        Vector3 viewPos = transform.position;
+        viewPos.x = Mathf.Clamp(viewPos.x, wall_left.x+0.5f, wall_Right.x-0.5f);
+        transform.position = viewPos;
     }
 }

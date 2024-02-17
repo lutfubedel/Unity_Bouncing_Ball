@@ -10,6 +10,8 @@ TagManager:
   - Hoop
   - Bottom_Hoop
   - Obstacle_Rotate
+  - Wall_Left
+  - Wall_Right
   layers:
   - Default
   - TransparentFX
