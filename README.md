@@ -37,13 +37,16 @@ Bu proje, Unity kullanılarak mobil cihazlar için geliştirilen bir **Hyper Cas
 <div style="display: flex; justify-content: space-around;">
   <img src="./images/img_1.jpg" alt="Ana Menü" width="300">
   <img src="./images/img_2.jpg" alt="Ayarlar" width="300">
-  <img src="./images/img_3.jpg" alt="Takımlar" width="300">
 </div>
 
 <div style="display: flex; justify-content: space-around;">
-  <img src="./images/img_4.jpg" alt="Oyun" width="300">
-  <img src="./images/img_5.jpg" alt="Durdurma Ekranı" width="300">
-  <img src="./images/img_6.jpg" alt="Oyun Sonu" width="300">
+  <img src="./images/img_3.jpg" alt="Oyun" width="300">
+  <img src="./images/img_4.jpg" alt="Durdurma Ekranı" width="300">
+</div>
+
+<div style="display: flex; justify-content: space-around;">
+  <img src="./images/img_5.jpg" alt="Oyun" width="300">
+  <img src="./images/img_6.jpg" alt="Durdurma Ekranı" width="300">
 </div>
 
 ## Lisans
